@@ -1,5 +1,5 @@
 import axios from "axios"
-const baseUrl = 'https://part3-1g7g.onrender.com/api/persons'
+const baseUrl = 'http://localhost:3001/api/persons'
 // http://localhost:3001/api/persons
 
 const getAll = () => {
