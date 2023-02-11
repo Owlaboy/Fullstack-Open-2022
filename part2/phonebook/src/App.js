@@ -132,9 +132,8 @@ const App = () => {
             setTimeout(setErrorMessage, 3000, null)
           })
           .catch(error => {
-            console.log(error.response.data)
-            setErrorMessage(error.response.data)
-            setTimeout(setErrorMessage, 3000, null)
+            setErrorMessage(error.response.data.error)
+            setTimeout(setErrorMessage, 4000, null)
           })
           
     }
