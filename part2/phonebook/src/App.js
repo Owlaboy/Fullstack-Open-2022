@@ -128,9 +128,14 @@ const App = () => {
           .then(response => {
             newPersons.push(response)
             setPersons(newPersons)
+            setErrorMessage(`added ${newPerson.name}`)
+            setTimeout(setErrorMessage, 3000, null)
           })
-          setErrorMessage(`added ${newPerson.name}`)
-          setTimeout(setErrorMessage, 3000, null)
+          .catch(error => {
+            setErrorMessage(error.response.data.error)
+            setTimeout(setErrorMessage, 4000, null)
+          })
+          
     }
     setNewName("")
     event.target.value = ""
