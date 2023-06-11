@@ -41,10 +41,49 @@ const TopTenCountries = (props) => {
   )
 }
 
+const WeatherImage = (props) => {
+  const weather = props.weather
+
+  return (
+    <div>
+      <img src={"https://openweathermap.org/img/wn/10d@"+ weather.icon + ".png"}/>
+    </div>
+  )
+}
+
+const CountryWeather = (props) => {
+  const country = props.country  
+  const [ weatherData, setWeatherData ] = useState([])
+
+  const clon = country.latlng[1]
+  const clat = country.latlng[0]
+
+  useEffect(() => {
+    dataService.getWeather(clon, clat)
+      .then(initialData => {
+        setWeatherData(initialData)
+      })
+  }, [])
+  console.log(weatherData)
+
+
+    return(
+    <div>
+    <h2>Weather in {country.capital[0]}</h2>
+    <div>temperature: {weatherData.main.temp} Celsius</div>
+    <div>wind: {weatherData.wind.speed} m/s</div>
+    </div>
+  )
+    
+}
+
 const CountryDetails = (props) => {
   const country = props.country
-  console.log('%cApp.js line:24 props', 'color: #007acc;', props);
-  console.log('%cApp.js line:47 country.languages', 'color: #007acc;', Object.values(country.languages));
+  const clon = country.latlng[1]
+  const clat = country.latlng[0]
+
+
+
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -55,6 +94,8 @@ const CountryDetails = (props) => {
       {Object.values(country.languages).map(language => <li>{language}</li>)}
       </ul>
       <img src={country.flags.png} alt="flag" height="100" />
+      <CountryWeather country={country} />
+
     </div>
   )
 }
