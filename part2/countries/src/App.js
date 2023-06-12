@@ -46,13 +46,14 @@ const WeatherImage = (props) => {
 
   return (
     <div>
-      <img src={"https://openweathermap.org/img/wn/10d@"+ weather.icon + ".png"}/>
+      <img src={"https://openweathermap.org/img/wn/"+ weather.weather[0].icon + "@2x.png"}/>
     </div>
   )
 }
 
 const CountryWeather = (props) => {
   const country = props.country  
+  const [isLoading, setLoading] = useState(true)
   const [ weatherData, setWeatherData ] = useState([])
 
   const clon = country.latlng[1]
@@ -62,15 +63,21 @@ const CountryWeather = (props) => {
     dataService.getWeather(clon, clat)
       .then(initialData => {
         setWeatherData(initialData)
+        setLoading(false)
       })
   }, [])
-  console.log(weatherData)
 
-
+  if (isLoading) {
     return(
+      <div>Loading weather data</div>
+    )
+  }
+
+  return(
     <div>
     <h2>Weather in {country.capital[0]}</h2>
     <div>temperature: {weatherData.main.temp} Celsius</div>
+    <WeatherImage weather={weatherData} />
     <div>wind: {weatherData.wind.speed} m/s</div>
     </div>
   )
@@ -79,10 +86,6 @@ const CountryWeather = (props) => {
 
 const CountryDetails = (props) => {
   const country = props.country
-  const clon = country.latlng[1]
-  const clat = country.latlng[0]
-
-
 
   return (
     <div>
