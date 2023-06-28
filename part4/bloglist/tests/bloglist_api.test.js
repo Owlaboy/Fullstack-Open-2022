@@ -133,9 +133,17 @@ test('HTTP delete returns 204 and removes the right blog.', async () => {
     expect(result.body).toHaveLength(initialBlogs.length -1)
     })
 
-test('HTTP put updates a blog' async () => {
+test('HTTP put updates a blog', async () => {
     const startingBlogs = await api.get('/api/blogs')
+    const blogToUpdate = startingBlogs.body[0]
+    blogToUpdate.likes = 20
+
+    await api.put(`/api/blogs/${blogToUpdate.id}`).send(blogToUpdate).expect(200)
+    const result = await api.get('/api/blogs')
+    expect(result.body[0].likes).toBe(20)
 })
+
+    
 
 afterAll(async () => {
     await mongoose.connection.close()
