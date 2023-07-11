@@ -1,4 +1,4 @@
-POST http://localhost:3003/api/blogs
+PUT http://localhost:3003/api/blogs/64ac0c7d7e6300f21b02e548
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Indob2V2ZXIiLCJpZCI6IjY0YWMwYjFmZDc4ZWI3OTIyN2YwM2ZiOSIsImlhdCI6MTY4ODk5Njk2MH0.7NLjYPNTtS2F_ynlZOAn4TImd_bbgGBIjYSHpG1Cpc4
 
@@ -7,6 +7,6 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Indob
     "title": "String",
     "author": "String",
     "url": "123123",
-    "likes": "50"
+    "likes": "20"
 }
 
