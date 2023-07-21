@@ -46,7 +46,7 @@ blogsRouter.post('/api/blogs', async (request, response) => {
     response.status(400).json(err.name + " | " + err.message)
   }
   
-  user.blogs = user.blogs.concat(savedBlog._id)
+  user.blogs = user.blogs.concat(savedBlog.id)
 
   await user.save()
   response.status(201).json(savedBlog)
@@ -54,16 +54,16 @@ blogsRouter.post('/api/blogs', async (request, response) => {
 
 blogsRouter.delete('/api/blogs/:id', async (request, response) => {
   const blogToRemove = await Blog.findById(request.params.id)
-
+  console.log("ayo what")
   let decodedToken
   try {
     decodedToken = jwt.verify(request.token, process.env.SECRET)
   } catch (err) {
-    return response.status(401).json({err: 'token invalid'})
+    return response.status(401).json({err: 'token invalid1'})
   }
 
   if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid'})
+    return response.status(401).json({ error: 'token invalid2'})
   }
   if (decodedToken.id = blogToRemove.user) {
     await Blog.findByIdAndRemove(request.params.id)
