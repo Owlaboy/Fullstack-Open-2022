@@ -1,12 +1,9 @@
-import Togglable from "./Togglable"
-import {useState} from "react"
-import blogsService from "../services/blogs"
-
+import Togglable from './Togglable'
 
 const Blog = (props) => {
   const blog = props.blog
   const handleDelete = props.handleDelete
-  const [likes, setLikes] = useState(blog.likes)
+  const handleLike = props.handleLike
 
   const blogStyle = {
     paddingTop: 10,
@@ -17,45 +14,41 @@ const Blog = (props) => {
   }
 
   const buttonStyle = {
-    "backgroundColor": "#3b65ff",
-    "color": "white"
+    'backgroundColor': '#3b65ff',
+    'color': 'white'
   }
 
-  const handleLike = () => {
-    setLikes(likes+1)
-    blog.likes = likes+1
-
-    const user = blog.user
-    blog.user = blog.user.id
-
-    blogsService.update(blog).then()
-
-    blog.user = user
-  }
-  
   const handleDeleteClick = () => {
-    if (window.confirm(`Remove blog ${blog.name} by ${blog.author}?`)) {
-      handleDelete(blog)
+    if (props.deletingUser.username === props.blog.user.username) {
+      if (window.confirm(`Remove blog ${blog.name} by ${blog.author}?`)) {
+        handleDelete(blog)
+      }
+    } else {
+      console.log('Invalid user')
     }
   }
-  
+
+  const handleLikeClick = async () => {
+    await handleLike(blog)
+  }
+
   return (
-    <div style={blogStyle}>
-        {blog.title} {blog.author}
-      <Togglable id="bruh" datat-testid="bruh2" buttonLabel="more info">
+    <div data-testid='blog' style={blogStyle}>
+      {blog.title} {blog.author}
+      <Togglable showButtonId={'view'} showButtonLabel="more info">
         <div>
           <div>{blog.url}</div>
-          <div>likes: {likes} <button onClick={handleLike}>like</button></div>
+          <div>likes: {blog.likes} <button id={'like'} onClick={handleLikeClick }>like</button></div>
           <div>{blog.user.name}</div>
-
+          {(props.deletingUser.username === props.blog.user.username) &&
           <div>
-            <button onClick={handleDeleteClick} style={buttonStyle} >Remove</button>
+            <button id={'remove'} onClick={handleDeleteClick} style={buttonStyle} >Remove</button>
           </div>
-          
-        </div>          
+          }
+        </div>
       </Togglable>
-        
+
     </div>
-    )}
+  )}
 
 export default Blog

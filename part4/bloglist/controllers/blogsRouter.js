@@ -54,7 +54,6 @@ blogsRouter.post('/api/blogs', async (request, response) => {
 
 blogsRouter.delete('/api/blogs/:id', async (request, response) => {
   const blogToRemove = await Blog.findById(request.params.id)
-  console.log("ayo what")
   let decodedToken
   try {
     decodedToken = jwt.verify(request.token, process.env.SECRET)

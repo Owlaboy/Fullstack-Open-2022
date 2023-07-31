@@ -25,8 +25,9 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      console.log(user)
     }
-    
+
   }, [])
 
   const alert = (message) => {
@@ -38,7 +39,7 @@ const App = () => {
     if (message === null) {
       return null
     }
-  
+
     return (
       <div className="error">
         {message}
@@ -62,41 +63,43 @@ const App = () => {
 
       alert(`Logged in as ${user.name}`)
     } catch (exception) {
-      alert("Wrong credentials")
+      alert('Wrong credentials')
     }
     console.log('logging in with', username, password)
-    
+
   }
 
-  const handleLogOut = async (event) => {
+  const handleLogOut = async () => {
     window.localStorage.removeItem('loggedBloglistUser')
     setUser('')
-    alert("Logged out")
+    alert('Logged out')
   }
 
   const loginForm = () => (
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
-        <div>
-          Username: 
-          <input
+    <form onSubmit={handleLogin}>
+      <h2>Login</h2>
+      <div>
+          Username:
+        <input
+          id="username"
           type='text'
           value={username}
           name= "Username"
           onChange={({ target }) => setUsername(target.value)}
-          />    
-        </div>
-        <div>
-          Password: 
-          <input
+        />
+      </div>
+      <div>
+          Password:
+        <input
+          id="password"
           type='text'
           value={password}
           name= "Password"
           onChange={({ target }) => setPassword(target.value)}
-          />    
-        </div>
-        <button type="submit">save</button>
-      </form>
+        />
+      </div>
+      <button id="login-button" type="submit">log in</button>
+    </form>
   )
 
   const addBlog = async (blogToAdd) => {
@@ -108,12 +111,28 @@ const App = () => {
       console.log(exception)
       alert(`something went wrong: ${exception.response.data}`)
     }
-    
-  } 
+
+  }
 
   const handleDelete = async (blogToDelete) => {
     blogService.remove(blogToDelete)
-    setBlogs(blogs.filter(blog => blog.id != blogToDelete.id))
+    setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id))
+  }
+
+  const handleLike = async (blog) => {
+    blog.likes = blog.likes+1
+
+    const user = blog.user
+    blog.user = blog.user.id
+
+    await blogService.update(blog)
+
+    blog.user = user
+
+    console.log(blog)
+    const blogs = await blogService.getAll()
+    blogs.sort((a,b) => b.likes - a.likes)
+    setBlogs( blogs )
   }
 
   return (
@@ -122,20 +141,18 @@ const App = () => {
       <div>
         {!user && loginForm()}
       </div>
-      {user && 
+      {user &&
       <div>
 
-        {user.name} logged in 
-        <button onClick={handleLogOut}>log out</button>
+        {user.name} logged in
+        <button id={'logOut-button'} onClick={handleLogOut}>log out</button>
 
         <h2>Blogs</h2>
 
-        <Togglable buttonLabel="new blog">
-          <BlogForm createBlog={addBlog} /> 
+        <Togglable showButtonId={'BlogFormShow'} hideButtonId={'BlogFormHide'} showButtonLabel="new blog">
+          <BlogForm createBlog={addBlog} />
         </Togglable>
-
-        {blogs.map(blog => <Blog key={blog.id} blog={blog} handleDelete={handleDelete} /> )}
-     
+        {blogs.map(blog => <Blog key={blog.id} blog={blog} deletingUser={user} handleDelete={handleDelete} handleLike={handleLike} /> )}
       </div>
       }
     </div>
